@@ -12,7 +12,7 @@
 </ion-header>
 
 <ion-content padding>
- <ion-list>
+ <ion-list [reorder]="editaOrdem" (ionItemReorder)="reordenaTarefa($event)">
    <ion-item-sliding *ngFor="let tarefa of tarefas">
      <ion-item>{{tarefa}}</ion-item>
      <ion-item-options side="right">
@@ -24,3 +24,9 @@
 
  </ion-list>
 </ion-content>
+<ion-footer>
+  <ion-item>
+    <ion-label>Organizar</ion-label>
+    <ion-toggle [(ngModel)]="editaOrdem"></ion-toggle>
+  </ion-item>
+</ion-footer>

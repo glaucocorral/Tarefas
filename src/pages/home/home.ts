@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, LoadingController } from 'ionic-angular';
+import { NavController, AlertController, LoadingController, reorderArray } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -7,6 +7,7 @@ import { NavController, AlertController, LoadingController } from 'ionic-angular
 })
 export class HomePage {
   public tarefas = [];
+  public editaOrdem = false;
 
   constructor(public navCtrl: NavController,
               private alertController: AlertController,
@@ -14,6 +15,9 @@ export class HomePage {
 
   }
 
+  reordenaTarefa($event){
+    reorderArray(this.tarefas,$event);
+  }
   alertaAdicionarTarefa(){
     let novaTarefa = this.alertController.create({
       title: "Nova Tarefa",
