@@ -13,17 +13,23 @@
 
 <ion-content padding>
  <ion-list [reorder]="editaOrdem" (ionItemReorder)="reordenaTarefa($event)">
-   <ion-item-sliding *ngFor="let tarefa of tarefas">
-     <ion-item>{{tarefa}}</ion-item>
+   <ion-item-sliding *ngFor="let tarefa of tarefashome, let i = index">
+     <ion-item ion-long-press (onPressing)="alertaEditarTarefa(i)">{{tarefa}}</ion-item>
      <ion-item-options side="right">
-     <button ion-button color="danger" (click)="alertaRemoverTarefa(tarefa)">
+     <button ion-button color="danger" (click)="alertaArquivarTarefa(tarefa, i)">
        <ion-icon name="trash"></ion-icon>
      </button>
      </ion-item-options>
    </ion-item-sliding>
 
  </ion-list>
+  <ion-fab right bottom>
+    <button ion-fab (click)="goToArquivadas()">
+      <ion-icon name="archive"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
+
 <ion-footer>
   <ion-item>
     <ion-label>Organizar</ion-label>

@@ -1,22 +1,25 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController, LoadingController, reorderArray } from 'ionic-angular';
+import { AppService } from '../../providers/app/app';
+import {ArquivadasPage} from "../arquivadas/arquivadas";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  public tarefas = [];
+  public tarefashome = [];
   public editaOrdem = false;
 
   constructor(public navCtrl: NavController,
               private alertController: AlertController,
-              private LoadController: LoadingController) {
-
+              private LoadController: LoadingController,
+              private appService: AppService) {
+    this.tarefashome = this.appService.getTarefas();
   }
 
   reordenaTarefa($event){
-    reorderArray(this.tarefas,$event);
+    reorderArray(this.tarefashome,$event);
   }
   alertaAdicionarTarefa(){
     let novaTarefa = this.alertController.create({
@@ -37,7 +40,7 @@ export class HomePage {
           handler: (inputData)=>{
             let dados;
             dados = inputData.inputNovaTarefa;
-            this.tarefas.push(dados);
+            this.appService.addTarefas(dados);
           }
         }
       ]
@@ -45,37 +48,55 @@ export class HomePage {
     novaTarefa.present();
   }
 
-  alertaRemoverTarefa(tarefa){
-    let removeTarefa = this.alertController.create({
-      title: "Remover Tarefa",
-      message: "Gostaria de remover a tarefa?",
+  alertaEditarTarefa(i) {
+    let editaTarefas = this.alertController.create({
+      title: 'Editar Tarefa',
+      message: 'Edite sua tarefa',
+      inputs: [
+        {
+          type: "text",
+          name: "inputEditarTarefa",
+          value: this.tarefashome[i]
+        }
+      ],
       buttons: [
         {
-          text:"Cancelar"
+          text: 'Cancelar'
         },
         {
-          text:"Apagar",
-          handler: ()=>{
-            let index = this.tarefas.indexOf(tarefa);
-            if(index > -1) {
-              this.tarefas.splice(index,1);
-              this.doSpinning();
-            }
+          text: 'Salvar',
+          handler: (inputData)=> {
+            this.appService.editarTarefas(i, inputData.inputEditarTarefa);
+            this.appService.doToast("Tarefa editada");
           }
         }
       ]
     });
-    removeTarefa.present();
+    editaTarefas.present();
   }
 
-  doSpinning() {
+goToArquivadas() {
+    this.navCtrl.push(ArquivadasPage);
+}
 
-    let loader = this.LoadController.create({
-      content: "Aguarde...",
-      duration:2000
+  alertaArquivarTarefa(tarefa,index) {
+
+    let arquivaTarefas = this.alertController.create({
+      title: 'Arquivamento',
+      message: 'Gostaria de arquivar sua tarefa?',
+      buttons: [
+        {
+          text: 'Cancelar'
+        },
+        {
+          text: 'Arquivar',
+          handler: (inputData)=> {
+            this.appService.arquivaTarefa(tarefa,index);
+            this.appService.doToast("Tarefa arquivada");
+          }
+        }
+      ]
     });
-
-    loader.present();
+    arquivaTarefas.present();
   }
-
 }
